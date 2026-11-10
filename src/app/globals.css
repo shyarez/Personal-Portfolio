@@ -1,26 +1,198 @@
 @import "tailwindcss";
+@import "lenis/dist/lenis.css";
 
+/* ------------------------------------------------------------------
+   Design tokens: "occult pop" palette inspired by Dandadan:
+   deep ink night, Momo's hot-pink aura, spirit cyan, volt yellow.
+------------------------------------------------------------------- */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --ink: #0b0710;
+  --ink-2: #140d1c;
+  --ink-3: #1e1529;
+  --paper: #f6efe4;
+  --paper-2: #ebe1d1;
+  --momo: #ff3d8b;
+  --momo-soft: #ff8fbd;
+  --aura: #3ff2e3;
+  --volt: #e9ff3b;
+  --violet: #7a5cff;
+  --ember: #ff5a36;
+  --muted: #a99bb8;
+
+  --background: var(--ink);
+  --foreground: #f4ecf7;
+  --radius: 1rem;
 }
 
 @theme inline {
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-momo: var(--momo);
+  --color-momo-soft: var(--momo-soft);
+  --color-aura: var(--aura);
+  --color-volt: var(--volt);
+  --color-violet: var(--violet);
+  --color-ember: var(--ember);
+  --color-muted: var(--muted);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display), var(--font-body), sans-serif;
+  --font-mono: var(--font-code), ui-monospace, monospace;
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 4px);
+  --radius-sm: calc(var(--radius) - 8px);
+
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-spin-slow: spin 18s linear infinite;
+  --animate-flicker: flicker 3.2s steps(1) infinite;
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-14px); }
+  }
+  @keyframes flicker {
+    0%, 100% { opacity: 1; }
+    42% { opacity: 1; }
+    43% { opacity: 0.4; }
+    45% { opacity: 1; }
+    71% { opacity: 0.7; }
+    72% { opacity: 1; }
   }
 }
 
+* {
+  border-color: rgb(255 255 255 / 0.08);
+}
+
+html {
+  background: var(--ink);
+  color-scheme: dark;
+}
+
 body {
-  background: var(--background);
+  background: var(--ink);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--momo);
+  color: white;
+}
+
+/* Hide native cursor only when the custom cursor is active (fine pointers) */
+@media (pointer: fine) {
+  html.has-custom-cursor,
+  html.has-custom-cursor * {
+    cursor: none !important;
+  }
+}
+
+/* ---------- Texture utilities ---------- */
+@utility halftone {
+  background-image: radial-gradient(currentColor 1.2px, transparent 1.4px);
+  background-size: 9px 9px;
+}
+
+@utility halftone-fade {
+  background-image: radial-gradient(currentColor 1.3px, transparent 1.5px);
+  background-size: 10px 10px;
+  mask-image: linear-gradient(to bottom, black, transparent);
+}
+
+@utility speedlines {
+  background-image: repeating-conic-gradient(
+    from 0deg at 50% 50%,
+    rgb(255 255 255 / 0.07) 0deg 1.2deg,
+    transparent 1.2deg 7deg
+  );
+  mask-image: radial-gradient(circle at center, transparent 22%, black 70%);
+}
+
+@utility text-outline {
+  -webkit-text-stroke: 1.5px currentColor;
+  color: transparent;
+}
+
+@utility text-outline-ink {
+  -webkit-text-stroke: 2px var(--ink);
+  color: transparent;
+}
+
+@utility font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+@utility panel {
+  border: 2px solid rgb(255 255 255 / 0.1);
+  background: linear-gradient(160deg, rgb(255 255 255 / 0.05), rgb(255 255 255 / 0.01));
+  backdrop-filter: blur(10px);
+}
+
+/* Film grain overlay */
+.grain {
+  pointer-events: none;
+  position: fixed;
+  inset: -50%;
+  z-index: 60;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  animation: grain 1.2s steps(6) infinite;
+}
+
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-3%, 2%); }
+  40% { transform: translate(2%, -4%); }
+  60% { transform: translate(-4%, -2%); }
+  80% { transform: translate(3%, 4%); }
+  100% { transform: translate(0, 0); }
+}
+
+/* Paper page (manga) sections */
+.paper-section {
+  background-color: var(--paper);
+  color: var(--ink);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--ink);
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(var(--momo), var(--violet));
+  border-radius: 999px;
+  border: 2px solid var(--ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grain {
+    animation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* SplitText masks clip at the line box; give descenders (y, g, p, j) room without changing layout. */
+.split-safe div,
+.split-safe span {
+  padding-bottom: 0.16em;
+  margin-bottom: -0.16em;
 }
