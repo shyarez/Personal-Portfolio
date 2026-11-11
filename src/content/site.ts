@@ -240,13 +240,15 @@ export const characterArt = {
 /**
  * Hero (landing) portrait frames (extracted from assets/Pouty Anime Girl Expressions.gif).
  *  01 neutral · 02 pout · 03 pout + puff · 04 arms crossed · 05 cheeks on fists · 06 wink + heart
- * `idle` shows on first sight; hovering her cycles through `pout` (one frame per hover).
+ *  07/08 wave (from assets/Anime Greeting Wave Animation.gif)
+ * `idle` (the wave, looped) shows on first sight; hovering her cycles through `pout` (one frame per hover).
  */
 export const heroPortrait = {
   enabled: true,
-  count: 6,
-  path: (n: number) => `/characters/pout/pout-${String(n).padStart(2, "0")}.webp`,
-  idle: [1],
+  count: 8,
+  path: (n: number) =>
+    n > 6 ? `/characters/pout/wave-0${n - 6}.webp` : `/characters/pout/pout-${String(n).padStart(2, "0")}.webp`,
+  idle: [7, 8],
   pout: [2, 3, 4, 5, 6],
 };
 
