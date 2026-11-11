@@ -5,7 +5,7 @@ import { gsap } from "@/lib/gsap";
 import { chibi } from "@/content/site";
 import { cn } from "@/lib/utils";
 
-const ALL = Array.from({ length: chibi.count }, (_, i) => i + 1);
+export type FrameSet = { count: number; path: (n: number) => string };
 
 /**
  * Frame-based chibi character.
@@ -15,8 +15,20 @@ const ALL = Array.from({ length: chibi.count }, (_, i) => i + 1);
  * and the character stays anchored in exactly the same place for every pose.
  *
  * `sequence` is one frame (a held pose) or several (looped at `chibi.interval`).
+ * `set` swaps in a different frame set (defaults to the chibi frames).
  */
-export function ChibiSprite({ sequence, className }: { sequence: number[]; className?: string }) {
+export function ChibiSprite({
+  sequence,
+  className,
+  set = chibi,
+  alt = "Chibi character",
+}: {
+  sequence: number[];
+  className?: string;
+  set?: FrameSet;
+  alt?: string;
+}) {
+  const all = Array.from({ length: set.count }, (_, i) => i + 1);
   const root = useRef<HTMLDivElement>(null);
   const [tick, setTick] = useState(0);
   const key = sequence.join(",");
@@ -49,12 +61,12 @@ export function ChibiSprite({ sequence, className }: { sequence: number[]; class
 
   return (
     <div ref={root} className={cn("relative aspect-square", className)}>
-      {ALL.map((n) => (
+      {all.map((n) => (
         // eslint-disable-next-line @next/next/no-img-element
         <img
           key={n}
-          src={chibi.path(n)}
-          alt={n === current ? "Chibi character" : ""}
+          src={set.path(n)}
+          alt={n === current ? alt : ""}
           aria-hidden={n !== current}
           draggable={false}
           loading="eager"

@@ -1,9 +1,9 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { ArrowDown, Download } from "lucide-react";
 import { gsap, SplitText, useGSAP } from "@/lib/gsap";
-import { characterArt, chibi, site } from "@/content/site";
+import { characterArt, chibi, heroPortrait, site } from "@/content/site";
 import { Momo } from "@/components/characters/momo";
 import { ChibiSprite } from "@/components/characters/chibi-sprite";
 import { PsychicHand } from "@/components/characters/psychic-hand";
@@ -21,6 +21,12 @@ export function Hero() {
   const root = useRef<HTMLElement>(null);
   const scrollTo = useScrollTo();
   const seq = characterArt.momo.heroSequence;
+  // Landing portrait: neutral on first sight, pouts while hovered (a different pout each time).
+  const [pout, setPout] = useState<number | null>(null);
+  const poutCount = useRef(0);
+  const startPout = () => {
+    setPout(heroPortrait.pout[poutCount.current++ % heroPortrait.pout.length]);
+  };
 
   useGSAP(
     () => {
@@ -267,6 +273,19 @@ export function Hero() {
                   end="+=110%"
                   className="h-full w-full"
                 />
+              ) : heroPortrait.enabled ? (
+                <div
+                  className="h-full w-full"
+                  onPointerEnter={startPout}
+                  onPointerLeave={() => setPout(null)}
+                >
+                  <ChibiSprite
+                    set={heroPortrait}
+                    alt="Anime-style avatar"
+                    sequence={pout ? [pout] : heroPortrait.idle}
+                    className="h-full w-full drop-shadow-[0_20px_60px_rgba(255,61,139,0.45)] [mask-image:linear-gradient(to_bottom,black_82%,transparent)] md:[mask-image:none]"
+                  />
+                </div>
               ) : chibi.enabled ? (
                 // Bust-up chibi: on desktop her cut-off edge rests on the bottom of the screen; on mobile it fades.
                 <ChibiSprite

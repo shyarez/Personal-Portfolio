@@ -189,7 +189,7 @@ export function Projects() {
         <div className="pj-track relative flex flex-col gap-10 px-6 py-28 md:h-full md:w-max md:flex-row md:items-center md:gap-10 md:px-[8vw] md:py-0">
           {/* Intro panel */}
           <div className="flex shrink-0 flex-col justify-center md:w-[38vw]">
-            <SectionHeading index="03" kana="作品" title="Selected projects" size="md" />
+            <SectionHeading index="03" kana="作品" title="Projects" size="md" />
             <p className="mt-6 max-w-sm text-lg text-foreground/70">
               A few things I&apos;ve designed, built and shipped. Keep scrolling, the panels move sideways.
             </p>

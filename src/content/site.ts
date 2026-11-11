@@ -237,6 +237,19 @@ export const characterArt = {
  * `sections` maps each section id to pose steps keyed by scroll progress (0 → 1)
  * through that section. A step with several frames loops them (e.g. the wave).
  */
+/**
+ * Hero (landing) portrait frames (extracted from assets/Pouty Anime Girl Expressions.gif).
+ *  01 neutral · 02 pout · 03 pout + puff · 04 arms crossed · 05 cheeks on fists · 06 wink + heart
+ * `idle` shows on first sight; hovering her cycles through `pout` (one frame per hover).
+ */
+export const heroPortrait = {
+  enabled: true,
+  count: 6,
+  path: (n: number) => `/characters/pout/pout-${String(n).padStart(2, "0")}.webp`,
+  idle: [1],
+  pout: [2, 3, 4, 5, 6],
+};
+
 export type ChibiStep = { from: number; frames: number[] };
 
 export const chibi = {
