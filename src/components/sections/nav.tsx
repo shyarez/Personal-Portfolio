@@ -59,7 +59,8 @@ export function Nav() {
           </button>
 
           <ul className="hidden items-center gap-1 lg:flex">
-            {LINKS.map((l) => (
+            {/* Contact is covered by the "Let's talk" button on desktop. */}
+            {LINKS.filter((l) => l.id !== "contact").map((l) => (
               <li key={l.id}>
                 <button
                   onClick={() => go(l.id)}
